@@ -115,7 +115,7 @@ export default function Home() {
             Nächstes Zeichen
           </button>
 
-          <div style={{ marginTop: '2rem', fontSize: '1rem' }}>
+          <div style={{ marginTop: '2rem', fontSize: '1rem', color:'black' }}>
             🎯 Richtig: {score.right}   ❌ Falsch: {score.wrong}
           </div>
         </>
@@ -135,13 +135,14 @@ export default function Home() {
             textAlign: 'center',
             boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
           }}>
-            <p style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+            <p style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'black' }}>
               {modalMessage}
             </p>
             <button onClick={closeModal}
                     style={{
                       padding: '0.5rem 1rem',
-                      fontSize: '1rem'
+                      fontSize: '1rem',
+                      color: 'black'
                     }}>
               Schließen
             </button>

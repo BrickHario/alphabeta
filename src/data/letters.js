@@ -1,8 +1,5 @@
-// data/alphabets.js
-// Vereinigung der kyrillischen und griechischen Alphabete mit Klassifikation
 export const alphabets = {
     cyrillic: [
-      // Russisch Standard (33)
       { char: 'А', lat: 'A', note: 'Russisch Standard' },
       { char: 'Б', lat: 'B', note: 'Russisch Standard' },
       { char: 'В', lat: 'V', note: 'Russisch Standard' },
@@ -36,21 +33,17 @@ export const alphabets = {
       { char: 'Э', lat: 'E', note: 'Russisch Standard' },
       { char: 'Ю', lat: 'YU', note: 'Russisch Standard' },
       { char: 'Я', lat: 'YA', note: 'Russisch Standard' },
-      // Ukrainisch Speziell (4)
       { char: 'Ґ', lat: 'G', note: 'Ukrainisch Speziell' },
       { char: 'Є', lat: 'YE', note: 'Ukrainisch Speziell' },
       { char: 'І', lat: 'I', note: 'Ukrainisch Speziell' },
       { char: 'Ї', lat: 'YI', note: 'Ukrainisch Speziell' },
-      // Weißrussisch Speziell (1)
       { char: 'Ў', lat: 'U', note: 'Weißrussisch Speziell' },
-      // Serbisch Speziell (6)
       { char: 'Ђ', lat: 'DJ', note: 'Serbisch Speziell' },
       { char: 'Ј', lat: 'J', note: 'Serbisch Speziell' },
       { char: 'Љ', lat: 'LJ', note: 'Serbisch Speziell' },
       { char: 'Њ', lat: 'NJ', note: 'Serbisch Speziell' },
       { char: 'Ћ', lat: 'C', note: 'Serbisch Speziell (Ć)' },
       { char: 'Џ', lat: 'DZH', note: 'Serbisch Speziell' },
-      // Mazedonisch Speziell (3)
       { char: 'Ѓ', lat: 'GJ', note: 'Mazedonisch Speziell' },
       { char: 'Ѕ', lat: 'DZ', note: 'Mazedonisch Speziell' },
       { char: 'Ќ', lat: 'KJ', note: 'Mazedonisch Speziell' }
