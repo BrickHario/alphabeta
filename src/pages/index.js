@@ -1,115 +1,153 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// pages/index.js
+import { useState, useEffect } from 'react';
+import { alphabets } from '../data/letters';
 
 export default function Home() {
+  const [alphabet, setAlphabet] = useState('cyrillic');
+  const [letters, setLetters] = useState([]);
+  const [current, setCurrent] = useState(null);
+  const [input, setInput] = useState('');
+  const [score, setScore] = useState({ right: 0, wrong: 0 });
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  useEffect(() => {
+    setLetters(alphabets[alphabet]);
+  }, [alphabet]);
+
+  useEffect(() => {
+    pickRandom();
+  }, [letters]);
+
+  function handleAlphabetChange(e) {
+    setAlphabet(e.target.value);
+    setScore({ right: 0, wrong: 0 });
+    setInput('');
+  }
+
+  function pickRandom() {
+    if (!letters.length) return;
+    const idx = Math.floor(Math.random() * letters.length);
+    setCurrent(letters[idx]);
+    setInput('');
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!current) return;
+    const guess = input.trim().toUpperCase();
+    const correct = current.lat.toUpperCase();
+
+    if (guess === correct) {
+      setModalMessage('✅ Richtig!');
+      setScore(s => ({ right: s.right + 1, wrong: s.wrong }));
+    } else {
+      setModalMessage(`❌ Falsch! Korrekt ist: ${current.lat}`);
+      setScore(s => ({ right: s.right, wrong: s.wrong + 1 }));
+    }
+    setShowModal(true);
+  }
+
+  function closeModal() {
+    setShowModal(false);
+    pickRandom();
+  }
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <div style={{
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'space-around',
+      height: '100vh', padding: '2rem', fontFamily: 'Arial, sans-serif'
+    }}>
+      <p>By BrickHario</p>
+      <h1 style={{ fontSize: '2em' }}>AlphaBeta</h1>
+      <div style={{ marginBottom: '1rem' }}>
+        <label>
+          Auswahl:
+          <select value={alphabet} onChange={handleAlphabetChange} style={{ marginLeft: '0.5rem' }}>
+            <option value="cyrillic">Kyrillisch</option>
+            <option value="greek">Griechisch</option>
+            <option value="arabic">Arabisch</option>
+          </select>
+        </label>
+      </div>
+
+      {current && (
+        <>
+          <div style={{ fontSize: '6rem', margin: '1rem', marginTop: '3vh' }}>
+            {current.char}
+          </div>
+          <div style={{ fontSize: '1rem', marginBottom: '0.5rem', color: '#666' }}>
+            Hinweis: {current.note}
+          </div>
+
+          <form onSubmit={handleSubmit}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <input
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Transliteration"
+              style={{
+                fontSize: '1.5rem',
+                padding: '0.5rem',
+                textTransform: 'uppercase',
+                textAlign: 'center',
+                marginTop: '5vh'
+              }}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <button type="submit"
+                    style={{
+                      fontSize: '1.2rem',
+                      marginTop: '1rem',
+                      padding: '0.5rem 1rem'
+                    }}>
+              Prüfen
+            </button>
+          </form>
+
+          <button onClick={pickRandom}
+                  style={{
+                    marginTop: '5vh',
+                    padding: '0.5rem 1rem',
+                    fontSize: '1.5em'
+                  }}>
+            Nächstes Zeichen
+          </button>
+
+          <div style={{ marginTop: '2rem', fontSize: '1rem' }}>
+            🎯 Richtig: {score.right}   ❌ Falsch: {score.wrong}
+          </div>
+        </>
+      )}
+
+      {showModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0,
+          width: '100%', height: '100%',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center'
+        }}>
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '2rem',
+            borderRadius: '8px',
+            textAlign: 'center',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.3)'
+          }}>
+            <p style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+              {modalMessage}
+            </p>
+            <button onClick={closeModal}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      fontSize: '1rem'
+                    }}>
+              Schließen
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )}
     </div>
   );
 }
